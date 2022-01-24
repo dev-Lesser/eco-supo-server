@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { CreateBookDto } from './create-book.dto'
 
 @Injectable()
 export class BooksService {
@@ -10,10 +11,9 @@ export class BooksService {
         return `${id} book`
     }
 
-    createBook(id: string): string{
+    createBook(data: CreateBookDto): string{
         return Object.assign({
-            statusCode: 201,
-            data: id,
+            data: data,
             statusMsg: 'created successfully',
           });
     }
