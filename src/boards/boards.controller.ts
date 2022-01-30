@@ -1,33 +1,51 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { Board } from './board.model';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { Board, BoardStatus } from './board.model';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 
 @Controller('boards')
 export class BoardsController {
-    constructor(private boardsService: BoardsService){} // 암묵적으로 boardsService가 클래스 프로퍼티로 선언됨 > typescript 특징 > 아래와 같이 할 수 있음
-    // boardsService: BoardsService;
-    // constructor(boardsService: BoardsService) {
-    //     this.boardsService = boardsService
-    // }
-    @Get()
-    getAllBoards(): Board[] {
-        return this.boardsService.getAllBoards();
-    }
+  constructor(private boardsService: BoardsService) {} // 암묵적으로 boardsService가 클래스 프로퍼티로 선언됨 > typescript 특징 > 아래와 같이 할 수 있음
+  // boardsService: BoardsService;
+  // constructor(boardsService: BoardsService) {
+  //     this.boardsService = boardsService
+  // }
+  @Get()
+  getAllBoards(): Board[] {
+    return this.boardsService.getAllBoards();
+  }
 
-    @Post()
-    createBoard(@Body() createBoardDto: CreateBoardDto): Board {
-        return this.boardsService.createBoard(createBoardDto)
-    }
-    
-    @Get('/:id')
-    getBoardById(@Param('id') id: string): Board {
-        return this.boardsService.getBoardById(id)
-    }
+  @Post()
+  @UsePipes(ValidationPipe) // handler level 로 dto 안의 is not empty 를 체크
+  createBoard(@Body() createBoardDto: CreateBoardDto): Board {
+    return this.boardsService.createBoard(createBoardDto);
+  }
 
-    
-    @Delete('/:id')
-    deleteBoard(@Param('id') id: string): void {
-        this.boardsService.deleteBoard(id) // return 값 따로 없음
-    }
+  @Get('/:id')
+  getBoardById(@Param('id') id: string): Board {
+    return this.boardsService.getBoardById(id);
+  }
+
+  @Delete('/:id')
+  deleteBoard(@Param('id') id: string): void {
+    this.boardsService.deleteBoard(id); // return 값 따로 없음
+  }
+
+  @Patch('/:id/status')
+  updateBoardStatus(
+    @Param('id') id: string,
+    @Body('status') status: BoardStatus,
+  ): Board {
+    return this.boardsService.updateBoardStatus(id, status);
+  }
 }
