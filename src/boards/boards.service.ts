@@ -36,7 +36,8 @@ export class BoardsService {
   }
   
   deleteBoard(id: string): void {
-    this.boards = this.boards.filter((board) => board.id !== id);
+    const found = this.getBoardById(id); // 있는지 먼저 체크
+    this.boards = this.boards.filter((board) => board.id !== found.id);
   }
   updateBoardStatus(id: string, status: BoardStatus): Board {
     const board = this.getBoardById(id); //이런식으로 위에 선언한 함수를 다시 재사용 가능하다
