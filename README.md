@@ -85,3 +85,17 @@ export class CreateBoardDto {
   description: string;
 }
 ```
+
+#### 커스텀 파이프를 이용한 유효성 체크
+- 인터페이스 새로 만들어야 한다
+- PipeTransform
+```typescript
+class testPipe implements PipeTransform {
+  transform(value: any, metadata: ArgumentMetadata)
+}
+```
+- 이렇게 무조건 설정
+
+- transform method : value, metadata 파라미터를 가짐 
+  - 처리가 된 인자값, 그것의 메타데이터
+- 보통 enum 타입 체크를 위한 것이라고 생각해도 될듯
