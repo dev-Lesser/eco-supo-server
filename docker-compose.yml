@@ -1,13 +1,15 @@
-version: "3"
+version: '3.7'
 services:
-    db:
-      image: postgres:latest
-      container_name: postgres
-      restart: always
-      ports:
-          - "5432:5432"
-      environment:
-          POSTGRES_USER: "postgres"
-          POSTGRES_PASSWORD: "postgres123"
-      volumes:
-          - ./data/:/var/lib/postgresql/data
+    postgres:
+        image: postgres:latest
+        restart: always
+        container_name: postgres
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        logging:
+            options:
+                max-size: 10m
+                max-file: "3"
+        ports:
+            - '5438:5432'
