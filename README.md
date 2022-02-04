@@ -164,6 +164,30 @@ export class Board extends BaseEntity {
 ##### Repository 생성
 - 엔티티 개체와 함께 작동 
   - 삽입, 찾기, 업데이트, 삭제 등을 처리
-  - https://typeorm.delightful.studio/classes/_repository_repository_.repository.html
+  - [공식문서](https://typeorm.delightful.studio/classes/_repository_repository_.repository.html)
+  - DB 관련 작업이라 보면 됨 - repository pattern
 
+1. 리포지토리 파일 생성
+- board.repository.tx
+2. 생성파일에 리포지토리를 위한 클래스 생성
+- 생성시 Repository 클래스를 Extends 함 (Find, insert, delete 등 엔티티 컨트롤)
+
+- @EntityRepository()
+  - 클래스를 custom 저장소로 선언하는데 사용
+
+```typescript
+@EntityRepository(Board)
+export class BoardRepository extends Repository<Board> {   
+}
+```
+- 이후 module 에 들어가 추가해준다. > 모듈을 추가하려고 하니깐 당연하다.
+```typescript
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([BoardRepository]) // 추가
+  ],
+  controllers: [BoardsController],
+  providers: [BoardsService], 
+})
+```
 
