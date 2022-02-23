@@ -9,6 +9,7 @@ export class BoardsService {
     getAllBoards(): Board[] { // GET ALL Boards
         return this.boards;
     }
+
     createBoard(createBoardDto: CreateBoardDto): Board { // CREATE 1 Board
         const {title, description} = createBoardDto;
 
@@ -21,7 +22,12 @@ export class BoardsService {
         this.boards.push(board)
         return board
     }
+
     getBoardById(id: string): Board {
         return this.boards.find((board) => board.id === id)
+    }
+
+    deleteBoard(id: string): void {
+        this.boards = this.boards.filter((board) => board.id !== id)
     }
 }
