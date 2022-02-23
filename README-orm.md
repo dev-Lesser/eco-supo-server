@@ -192,3 +192,6 @@ export class BoardRepository extends Repository<Board> {
   }
 ```
 - Path 파라미터는 무조건 string 이기 때문에 Int 형태로 parsing 하는 pipe 추가
+
+
+#### 게시물 상태 업데이트
