@@ -187,11 +187,12 @@ export class BoardRepository extends Repository<Board> {
 
 ```typescript
 @Delete('/:id')
-  deleteBoard(@Param('id', ParseIntPipe) id: number): void {
-    this.boardsService.deleteBoard(id)
+  deleteBoard(@Param('id', ParseIntPipe) id: number): Promise <void> { // Path 파라미터 int 로 > int parse 못하면 400 error
+    return this.boardsService.deleteBoard(id);
   }
 ```
 - Path 파라미터는 무조건 string 이기 때문에 Int 형태로 parsing 하는 pipe 추가
 
 
 #### 게시물 상태 업데이트
+#### 게시물 가져오기 with skip, limit

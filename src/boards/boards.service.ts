@@ -17,7 +17,12 @@ export class BoardsService {
   //   // GET ALL Boards
   //   return this.boards;
   // }
-
+  async getAllBoards(skip: number, limit: number): Promise <Board[]> {
+    return await this.boardRepository.find({
+      skip: skip,
+      take: limit,
+    })
+  }
   // createBoard(createBoardDto: CreateBoardDto): Board {
   //   // CREATE 1 Board
   //   const { title, description } = createBoardDto;
@@ -31,8 +36,8 @@ export class BoardsService {
   //   this.boards.push(board);
   //   return board;
   // }
-  createBoard(createBoardDto: CreateBoardDto): Promise <Board> {
-    return this.boardRepository.createBoard(createBoardDto); // repository 형식
+  async createBoard(createBoardDto: CreateBoardDto): Promise <Board> {
+    return await this.boardRepository.createBoard(createBoardDto); // repository 형식
   }
 
   // getBoardById(id: string): Board {

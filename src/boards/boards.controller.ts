@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -27,6 +29,13 @@ export class BoardsController {
   // getAllBoards(): Board[] {
   //   return this.boardsService.getAllBoards();
   // }
+  @Get()
+  getAllBoards(
+    @Query('skip', new DefaultValuePipe(0) , ParseIntPipe) skip: number, // DefulatValue Pipe 추가
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number
+  ): Promise <Board[]>{
+    return this.boardsService.getAllBoards(skip, limit);
+  }
 
   // @Post()
   // @UsePipes(ValidationPipe) // handler level 로 dto 안의 is not empty 를 체크
