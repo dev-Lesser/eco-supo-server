@@ -32,6 +32,9 @@ export class BoardsService {
   //   this.boards.push(board);
   //   return board;
   // }
+    createBoard(createBoardDto: CreateBoardDto): Promise <Board> {
+      return this.boardRepository.createBoard(createBoardDto); // repository 형식
+    }
 
   // getBoardById(id: string): Board {
   //   const found = this.boards.find((board) => board.id === id);

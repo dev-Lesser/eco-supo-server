@@ -108,3 +108,53 @@ export class BoardsService {
 #### service 에서 getBoardById 메소드 생성
 - TypeORM 에서 제공하는 findOne 메소드 사용
 - async, await 이용
+
+
+#### 게시물 생성하기
+- typeorm : create 메소드를 사용
+```typescript
+async createBoard(createBoardDto: CreateBoardDto): Promise <Board> {
+  const {title, description} = createBoardDto;
+
+  const board = this.boardRepository.create({
+    title,
+    description,
+    status: BoardStatus.PUBLIC
+  })
+  await this.boardRepository.save(board);
+  return board
+```
+- DB 저장 : save
+
+#### 엔티티 생성 반드시 @Entity()로 감싸야함
+```typescript
+@Entity()
+export class Board extends BaseEntity {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    title: string;
+
+    @Column()
+    description: string;
+
+    @Column()
+    status: BoardStatus;
+}
+```
+- Board 클래스가 엔티티임을 나타내는데 사용됨
+- 관련해서 POST 메소드를 주면
+```shell
+board-app=# select * from board ;
+ id | title | description | status 
+----+-------+-------------+--------
+  1 | 1     | sd          | PUBLIC
+  2 | 1     | sd          | PUBLIC
+  3 | 1     | sd          | PUBLIC
+  4 | 1     | sd          | PUBLIC
+  5 | 1     | sd          | PUBLIC
+(5 rows)
+```
+- 이런식으로 자동 id 가 붙는다
+#### DB 관련된 로직은 Repository 로 이동
