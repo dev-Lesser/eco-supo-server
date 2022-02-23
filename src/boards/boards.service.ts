@@ -32,9 +32,9 @@ export class BoardsService {
   //   this.boards.push(board);
   //   return board;
   // }
-    createBoard(createBoardDto: CreateBoardDto): Promise <Board> {
-      return this.boardRepository.createBoard(createBoardDto); // repository 형식
-    }
+  createBoard(createBoardDto: CreateBoardDto): Promise <Board> {
+    return this.boardRepository.createBoard(createBoardDto); // repository 형식
+  }
 
   // getBoardById(id: string): Board {
   //   const found = this.boards.find((board) => board.id === id);
@@ -45,17 +45,26 @@ export class BoardsService {
   //     return found;
   //   }
   // }
-    async getBoardById(id: number): Promise <Board> { // 엔티티에 정의된 값
-      const found = await this.boardRepository.findOne(id);
-      if (!found) {
-        throw new NotFoundException(`${id} cant be found`)
-      }
-      return found
+  async getBoardById(id: number): Promise <Board> { // 엔티티에 정의된 값
+    const found = await this.boardRepository.findOne(id);
+    if (!found) {
+      throw new NotFoundException(`${id} cant be found`)
     }
+    return found
+  }
   // deleteBoard(id: string): void {
   //   const found = this.getBoardById(id); // 있는지 먼저 체크
   //   this.boards = this.boards.filter((board) => board.id !== found.id);
   // }
+  
+  async deleteBoard(id: number): Promise<void> {
+    const result = await this.boardRepository.delete(id);
+    // 없을때의 로직
+    if (result.affected === 0) {
+      throw new NotFoundException(`Cant find id == ${id}`)
+    }
+
+  }
   // updateBoardStatus(id: string, status: BoardStatus): Board {
   //   const board = this.getBoardById(id); //이런식으로 위에 선언한 함수를 다시 재사용 가능하다
   //   board.status = status;

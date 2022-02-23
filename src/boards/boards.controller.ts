@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UsePipes,
@@ -32,25 +33,29 @@ export class BoardsController {
   // createBoard(@Body() createBoardDto: CreateBoardDto): Board {
   //   return this.boardsService.createBoard(createBoardDto);
   // }
-    @Post()
-    @UsePipes(ValidationPipe)
-    createBoard(@Body() createBoardDto: CreateBoardDto): Promise<Board> {
-      return this.boardsService.createBoard(createBoardDto);
-    }
+  @Post()
+  @UsePipes(ValidationPipe)
+  createBoard(@Body() createBoardDto: CreateBoardDto): Promise<Board> {
+    return this.boardsService.createBoard(createBoardDto);
+  }
 
   // @Get('/:id')
   // getBoardById(@Param('id') id: string): Board {
   //   return this.boardsService.getBoardById(id);
   // }
-    @Get('/:id')
-    getBoardById(@Param('id') id: number): Promise <Board> {
-      return this.boardsService.getBoardById(id)
-    }
+  @Get('/:id')
+  getBoardById(@Param('id') id: number): Promise <Board> {
+    return this.boardsService.getBoardById(id)
+  }
 
   // @Delete('/:id')
   // deleteBoard(@Param('id') id: string): void {
   //   this.boardsService.deleteBoard(id); // return 값 따로 없음
   // }
+  @Delete('/:id')
+  deleteBoard(@Param('id', ParseIntPipe) id: number): void { // Path 파라미터 int 로 > int parse 못하면 400 error
+    this.boardsService.deleteBoard(id);
+  }
 
   // @Patch('/:id/status')
   // updateBoardStatus(

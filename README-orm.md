@@ -158,3 +158,37 @@ board-app=# select * from board ;
 ```
 - 이런식으로 자동 id 가 붙는다
 #### DB 관련된 로직은 Repository 로 이동
+```typescript
+@EntityRepository(Board)
+export class BoardRepository extends Repository<Board> {
+    // board.service 에서 사용할 수 있게 DB 적용
+    async createBoard(createBoardDto: CreateBoardDto): Promise<Board>{
+        const {title, description} = createBoardDto;
+        const board = this.create({ // 이미 repository 안에 있어서
+            title,
+            description,
+            status: BoardStatus.PUBLIC
+        });
+        await this.save(board);
+        return board
+    
+    }
+}
+```
+- create, save 는 이미 repository 안에 들어가 있기 때문에 this 로 바로 접근 가능
+
+---
+
+#### 게시물 삭제
+- remove: 무조건 존재하는 아이템 > 아니면 404 error
+- delete: 존재하면 지움 > remove는 DB에 두번 접근
+- [공식문서](https://github.com/typeorm/typeorm/blob/master/docs/repository-api.md)
+
+
+```typescript
+@Delete('/:id')
+  deleteBoard(@Param('id', ParseIntPipe) id: number): void {
+    this.boardsService.deleteBoard(id)
+  }
+```
+- Path 파라미터는 무조건 string 이기 때문에 Int 형태로 parsing 하는 pipe 추가
