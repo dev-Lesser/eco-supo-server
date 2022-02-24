@@ -110,3 +110,24 @@ export class AuthCredentialsDto {
   }
 ```
 
+
+### 유저 이름에 유니크한 값 주기
+두가지 방법
+1. repository 에서 findOne : DB 처리 2번
+2. 데이터베이스 레벨에서 에러를 던져주는 방법 > 이 방법으로 entity 설정을 함
+```typescript
+@Entity()
+@Unique(['username']) // username 이 유니크한 값이다
+export class User extends BaseEntity {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    username: string;
+
+    @Column()
+    password: string;
+}
+```
+
+
