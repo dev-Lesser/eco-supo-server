@@ -321,3 +321,13 @@ export class BoardsController {
 ---
 ### 게시물 생성할 때 유저정보 넣어주기
 - 생성요청 > 헤더안 토큰 유저정보 > 가져와서 생성
+```typescript
+createBoard(
+    @Body() createBoardDto: CreateBoardDto,
+    @GetUser() user: User,
+    ): Promise<Board> {
+    return this.boardsService.createBoard(createBoardDto, user);
+  }
+```
+
+### 해당 유저의 게시물만 가져오기

@@ -37,9 +37,10 @@ export class BoardsController {
   @Get()
   getAllBoards(
     @Query('skip', new DefaultValuePipe(0) , ParseIntPipe) skip: number, // DefulatValue Pipe 추가
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @GetUser() user: User,
   ): Promise <Board[]>{
-    return this.boardsService.getAllBoards(skip, limit);
+    return this.boardsService.getAllBoards(skip, limit, user);
   }
 
   // @Post()

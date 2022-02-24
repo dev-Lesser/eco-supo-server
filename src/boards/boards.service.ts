@@ -18,11 +18,17 @@ export class BoardsService {
   //   // GET ALL Boards
   //   return this.boards;
   // }
-  async getAllBoards(skip: number, limit: number): Promise <Board[]> {
-    return await this.boardRepository.find({
-      skip: skip,
-      take: limit,
-    })
+  async getAllBoards(skip: number, limit: number, user: User): Promise <Board[]> {
+    const query = this.boardRepository.createQueryBuilder('board');
+    query.where('board.userId = :userId', {userId: user.id})
+      .skip(skip)
+      .take(limit)
+    const boards = await query.getMany();
+    return boards
+    // return await this.boardRepository.find({
+    //   skip: skip,
+    //   take: limit,
+    // })
   }
   // createBoard(createBoardDto: CreateBoardDto): Board {
   //   // CREATE 1 Board
