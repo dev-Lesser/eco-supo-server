@@ -83,3 +83,30 @@ async createUser(authCredentialsDto: AuthCredentialsDto): Promise <User> {
     }
 }
 ```
+
+### 유제 데이터 유효성 체크
+- class-validator
+```typescript
+export class AuthCredentialsDto {
+    @IsString()
+    @MinLength(4)
+    @MaxLength(20)
+    username: string;
+
+    @IsString()
+    @MinLength(4)
+    @MaxLength(20)
+    @Matches('/^[a-zA-Z0-9]*$/', {
+      message: 'password only accepts english & number'
+    })
+    password: string;
+}
+```
+- ValidationPipe : 요청이 컨트롤러에 있는 핸들러로 들어왔을때 Dto 에 있는 유효성 조건에 맞게 체크
+```typescript
+@Post('/signup')
+  signUp(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<User>{
+      return this.authService.signUp(authCredentialsDto);
+  }
+```
+
