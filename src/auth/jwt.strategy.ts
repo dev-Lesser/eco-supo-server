@@ -8,7 +8,6 @@ import { UserRepository } from "./user.repository";
 
 @Injectable() // > 다른곳에서도 사용할 수 있게 데코레이션 넣음
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    
     constructor (
         @InjectRepository(UserRepository)
         private userRepository: UserRepository,

@@ -282,3 +282,21 @@ User {
 }
 ```
 - 이런식으로 user 정보만 따로 빼서 나타낼수 있다
+
+
+### 인증된 유저만 게시물 보고 쓸수 있게 만들기
+- boards 모듈에 auth 모듈을 넣어준다
+```typescript
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([BoardRepository]),
+    AuthModule,
+  ],
+```
+```typescript
+@Controller('boards')
+@UseGuards(AuthGuard())
+export class BoardsController {
+  constructor(private boardsService: BoardsSe
+```
+- controler 레벨로 전체 인증이 필요
