@@ -153,3 +153,19 @@ export class UserRepository extends Repository<User> {
         })
         ...
 ```
+
+### 로그인 기능
+- hash 한 값과 입력값의 비교
+```typescript
+async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+        const {username, password} = authCredentialsDto;
+        const user = await this.userRepository.findOne({username}); // username으로 찾는다
+
+        if (user && (await bcrypt.compare(password, user.password))){
+            return 'Login success'
+        }
+        else {
+            throw new UnauthorizedException('Login failed')
+        }
+    }
+```
