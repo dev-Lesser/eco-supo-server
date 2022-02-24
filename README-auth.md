@@ -253,3 +253,32 @@ async validate(payload) {
     return user;
 }
 ```
+---
+
+### 커스텀 데코레이터 생성
+- 위의 방법에서 user 를 가져오려면 req.user 로 해야한다
+- 단순 user 로 객체를 가져오기 위해 커스터마이징 함
+1. get-user.decorator.ts
+```typescript
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+
+export const GetUser = createParamDecorator((data, ctx: ExecutionContext) =>{
+    const req = ctx.switchToHttp().getRequest();
+    return req.user;
+})
+```
+```typescript
+@Post('/test')
+    @UseGuards(AuthGuard())
+    test(@GetUser() user: User){
+        console.log(user)
+    }
+```
+```bash
+User {
+  id: 8,
+  username: 'test',
+  password: '...'
+}
+```
+- 이런식으로 user 정보만 따로 빼서 나타낼수 있다
