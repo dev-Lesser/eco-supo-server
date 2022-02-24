@@ -195,3 +195,61 @@ Module({
 ```
 
 
+### Passport 모듈
+- 클라이언트에서 요청 보낼때의 jwt 토큰을 함께 보내는 방법
+1. jwt.strategy.ts 파일 생성
+- @types/passport-jwt 모듈 > passport-jwt 모듈을 위함
+
+2. 코드작성
+- 다른곳에서도 써야하므로 injectable 을 해준다
+```typescript
+@Injectable() // > 다른곳에서도 사용할 수 있게 데코레이션 넣음
+
+export class JwtStrategy extends PassportStrategy(Strategy) {
+    constructor (
+        @InjectRepository(UserRepository)
+        private userRepository: UserRepository
+    ) {
+        super({
+            secretOrKey: 'SuperSecret', // .env 추가 > jwt 비교를 위한 값
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+        })
+    }   
+```
+- payload 에 담에 validation 을 진행함 > 이때 DB 에서 findOne 으로 username 을 검색함
+```typescript
+async validate(payload) {
+        const {username} = payload;
+        const user: User = await this.userRepository.findOne({username});
+
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+        return user;
+    }
+```
+- JwtStrategy 를 prividers 에 넣어줘야함
+```typescript
+providers: [AuthService, JwtStrategy],
+exports: [JwtStrategy, PassportModule] // 다른데에서도 사용할 수 있게 export
+```
+#### 요청안에 유저 정보를 넣는 방법
+- UserGuards : @nestjs/passport 에서 가져온 AuthGuard()를 이용하면 요청안에 유저 정보를 넣음
+```typescript
+@Post('/test')
+    @UseGuards(AuthGuard())
+    test(@Req() req){
+        console.log(req)
+    }
+```
+- 이 validate 함수의 전략을 사용하여 UseGuards 미들웨어가 들어가 있으면 user 정보가 들어가져 있음
+```typescript
+async validate(payload) {
+    const {username} = payload;
+    const user: User = await this.userRepository.findOne({username});
+    if (!user) {
+        throw new UnauthorizedException();
+    }
+    return user;
+}
+```
