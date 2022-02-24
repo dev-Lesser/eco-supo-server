@@ -71,8 +71,11 @@ export class BoardsController {
   //   this.boardsService.deleteBoard(id); // return 값 따로 없음
   // }
   @Delete('/:id')
-  deleteBoard(@Param('id', ParseIntPipe) id: number): Promise <void> { // Path 파라미터 int 로 > int parse 못하면 400 error
-    return this.boardsService.deleteBoard(id);
+  deleteBoard(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
+    ): Promise <void> { // Path 파라미터 int 로 > int parse 못하면 400 error
+    return this.boardsService.deleteBoard(id, user);
   }
 
   // @Patch('/:id/status')

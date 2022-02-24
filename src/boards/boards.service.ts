@@ -68,8 +68,11 @@ export class BoardsService {
   //   this.boards = this.boards.filter((board) => board.id !== found.id);
   // }
   
-  async deleteBoard(id: number): Promise<void> {
-    const result = await this.boardRepository.delete(id);
+  async deleteBoard(id: number, user: User): Promise<void> {
+    const result = await this.boardRepository.delete({
+      id, 
+      user
+    });
     // 없을때의 로직
     if (result.affected === 0) {
       throw new NotFoundException(`Cant find id == ${id}`)

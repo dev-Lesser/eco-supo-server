@@ -331,3 +331,33 @@ createBoard(
 ```
 
 ### 해당 유저의 게시물만 가져오기
+- board controller
+```typescript
+@Get()
+  getAllBoards(
+    @Query('skip', new DefaultValuePipe(0) , ParseIntPipe) skip: number, // DefulatValue Pipe 추가
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @GetUser() user: User,
+  ): Promise <Board[]>{
+    return this.boardsService.getAllBoards(skip, limit, user);
+  }
+```
+- board service
+```typescript
+async getAllBoards(skip: number, limit: number, user: User): Promise <Board[]> {
+    const query = this.boardRepository.createQueryBuilder('board');
+    query.where('board.userId = :userId', {userId: user.id})
+      .skip(skip)
+      .take(limit)
+    const boards = await query.getMany();
+    return boards
+```
+
+### 생성글 삭제하기
+```typescript
+async deleteBoard(id: number, user: User): Promise<void> {
+    const result = await this.boardRepository.delete({
+        id, 
+        user
+    });
+```
