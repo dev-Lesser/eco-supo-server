@@ -4,6 +4,7 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardRepository } from './board.repository';
 import { Board } from './board.entity';
+import { User } from 'src/auth/user.entity';
 @Injectable()
 export class BoardsService {
   constructor(
@@ -17,11 +18,17 @@ export class BoardsService {
   //   // GET ALL Boards
   //   return this.boards;
   // }
-  async getAllBoards(skip: number, limit: number): Promise <Board[]> {
-    return await this.boardRepository.find({
-      skip: skip,
-      take: limit,
-    })
+  async getAllBoards(skip: number, limit: number, user: User): Promise <Board[]> {
+    const query = this.boardRepository.createQueryBuilder('board');
+    query.where('board.userId = :userId', {userId: user.id})
+      .skip(skip)
+      .take(limit)
+    const boards = await query.getMany();
+    return boards
+    // return await this.boardRepository.find({
+    //   skip: skip,
+    //   take: limit,
+    // })
   }
   // createBoard(createBoardDto: CreateBoardDto): Board {
   //   // CREATE 1 Board
@@ -36,8 +43,8 @@ export class BoardsService {
   //   this.boards.push(board);
   //   return board;
   // }
-  async createBoard(createBoardDto: CreateBoardDto): Promise <Board> {
-    return await this.boardRepository.createBoard(createBoardDto); // repository 형식
+  async createBoard(createBoardDto: CreateBoardDto, user: User): Promise <Board> {
+    return await this.boardRepository.createBoard(createBoardDto, user); // repository 형식
   }
 
   // getBoardById(id: string): Board {
@@ -61,8 +68,11 @@ export class BoardsService {
   //   this.boards = this.boards.filter((board) => board.id !== found.id);
   // }
   
-  async deleteBoard(id: number): Promise<void> {
-    const result = await this.boardRepository.delete(id);
+  async deleteBoard(id: number, user: User): Promise<void> {
+    const result = await this.boardRepository.delete({
+      id, 
+      user
+    });
     // 없을때의 로직
     if (result.affected === 0) {
       throw new NotFoundException(`Cant find id == ${id}`)
