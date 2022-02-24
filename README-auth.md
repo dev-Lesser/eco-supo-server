@@ -131,3 +131,25 @@ export class User extends BaseEntity {
 ```
 
 
+### 비밀번호 암호화
+- bcryptjs : salt, hash
+```shell
+yarn add bcryptjs
+```
+
+```typescript
+import * as bcrypt from 'bcryptjs'
+@EntityRepository(User)
+export class UserRepository extends Repository<User> {
+    async createUser(authCredentialsDto: AuthCredentialsDto): Promise <User> {
+        const { username, password } = authCredentialsDto;
+
+        const salt = await bcrypt.genSalt(); // salt 생성
+        const hashedPassword = await bcrypt.hash(password, salt); // hash화
+
+        const user = this.create({
+            username,
+            password: hashedPassword
+        })
+        ...
+```
