@@ -158,14 +158,40 @@ export class UserRepository extends Repository<User> {
 - hash 한 값과 입력값의 비교
 ```typescript
 async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
-        const {username, password} = authCredentialsDto;
-        const user = await this.userRepository.findOne({username}); // username으로 찾는다
+    const {username, password} = authCredentialsDto;
+    const user = await this.userRepository.findOne({username}); // username으로 찾는다
 
-        if (user && (await bcrypt.compare(password, user.password))){
-            return 'Login success'
-        }
-        else {
-            throw new UnauthorizedException('Login failed')
-        }
+    if (user && (await bcrypt.compare(password, user.password))){
+        return 'Login success'
     }
+    else {
+        throw new UnauthorizedException('Login failed')
+    }
+}
 ```
+
+### JWT
+- json web token : json 객체로 안전하게 전송하기 위한 개방형 표준
+```
+yarn add @nestjs/jwt @nestjs/passport passport passport-jwt
+```
+#### auth 모듈에 jwt 모듈 등록
+```typescript
+Module({
+  imports: [
+    JwtModule.register({
+      secret: 'SupperSecret', // .env 화 필요
+      signOptions: {
+        expiresIn: 60*60 // 한시간
+      }
+    }),
+```
+#### auth 모듈에 passport 모듈 등록
+- jwt 방법으로
+```typescript
+@Module({
+  imports: [
+    PassportModule.register({defaultStrategy: 'jwt'}),
+```
+
+
