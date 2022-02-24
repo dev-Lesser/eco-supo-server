@@ -60,3 +60,5 @@ export class AuthService {
     ) {}
 }
 ```
+
+### 회원가입 기능
