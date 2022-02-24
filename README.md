@@ -1,3 +1,6 @@
+### config 파일들
+- s3://nestjs-yaml
+
 ### NestJS 튜토리얼
 1. nest cli
 2. module
