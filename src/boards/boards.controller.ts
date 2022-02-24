@@ -4,6 +4,7 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
+  Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -25,6 +26,7 @@ import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe'
 @Controller('boards')
 @UseGuards(AuthGuard())
 export class BoardsController {
+  private logger = new Logger('BoardsController');
   constructor(private boardsService: BoardsService) {} // 암묵적으로 boardsService가 클래스 프로퍼티로 선언됨 > typescript 특징 > 아래와 같이 할 수 있음
   // boardsService: BoardsService;
   // constructor(boardsService: BoardsService) {
@@ -40,6 +42,7 @@ export class BoardsController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @GetUser() user: User,
   ): Promise <Board[]>{
+    this.logger.verbose(`User ${user.username} trying to get all boards`)
     return this.boardsService.getAllBoards(skip, limit, user);
   }
 
@@ -54,7 +57,11 @@ export class BoardsController {
     @Body() createBoardDto: CreateBoardDto,
     @GetUser() user: User,
     ): Promise<Board> {
-    return this.boardsService.createBoard(createBoardDto, user);
+      this.logger.verbose(
+        `\nUser ${user.username} creating a new board. \n
+        payload: ${JSON.stringify(createBoardDto)}`
+      )
+      return this.boardsService.createBoard(createBoardDto, user);
   }
 
   // @Get('/:id')
