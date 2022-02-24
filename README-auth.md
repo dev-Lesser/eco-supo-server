@@ -61,4 +61,25 @@ export class AuthService {
 }
 ```
 
-### 회원가입 기능
+### 회원가입 기능 추가
+- DTO 추가
+``` typescript
+export class AuthCredentialsDto {
+    username: string;
+    password: string;
+}
+```
+- User repository 에 삽입
+```typescript
+async createUser(authCredentialsDto: AuthCredentialsDto): Promise <User> {
+        const { username, password } = authCredentialsDto;
+        const user = this.create({
+            username,
+            password
+        })
+
+        await this.save(user);
+        return user;
+    }
+}
+```
