@@ -299,4 +299,25 @@ User {
 export class BoardsController {
   constructor(private boardsService: BoardsSe
 ```
-- controler 레벨로 전체 인증이 필요
+- controller 레벨로 전체 인증이 필요
+
+### 유저와 게시물의 관계 형성
+- **엔티티**에 서로간의 필드를 넣어줘야함
+- [관계형성 설명 사이트](https://typeorm.io/#/many-to-one-one-to-many-relations)
+    - user entity : one to many, 
+    - boards entity : many to one
+```typescript
+ @OneToMany(type => Board, board => board.user, {eager: true})
+    boards: Board[] //여러개
+```
+- (user entity)
+```typescript
+@ManyToOne(type => User, user => user, {eager: false})
+    user: User // 
+}
+```
+-(boards entity)
+
+---
+### 게시물 생성할 때 유저정보 넣어주기
+- 생성요청 > 헤더안 토큰 유저정보 > 가져와서 생성
