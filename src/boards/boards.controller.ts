@@ -28,14 +28,7 @@ import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe'
 export class BoardsController {
   private logger = new Logger('BoardsController');
   constructor(private boardsService: BoardsService) {} // 암묵적으로 boardsService가 클래스 프로퍼티로 선언됨 > typescript 특징 > 아래와 같이 할 수 있음
-  // boardsService: BoardsService;
-  // constructor(boardsService: BoardsService) {
-  //     this.boardsService = boardsService
-  // }
-  // @Get()
-  // getAllBoards(): Board[] {
-  //   return this.boardsService.getAllBoards();
-  // }
+
   @Get()
   getAllBoards(
     @Query('skip', new DefaultValuePipe(0) , ParseIntPipe) skip: number, // DefulatValue Pipe 추가
@@ -46,11 +39,6 @@ export class BoardsController {
     return this.boardsService.getAllBoards(skip, limit, user);
   }
 
-  // @Post()
-  // @UsePipes(ValidationPipe) // handler level 로 dto 안의 is not empty 를 체크
-  // createBoard(@Body() createBoardDto: CreateBoardDto): Board {
-  //   return this.boardsService.createBoard(createBoardDto);
-  // }
   @Post()
   @UsePipes(ValidationPipe)
   createBoard(
@@ -64,19 +52,11 @@ export class BoardsController {
       return this.boardsService.createBoard(createBoardDto, user);
   }
 
-  // @Get('/:id')
-  // getBoardById(@Param('id') id: string): Board {
-  //   return this.boardsService.getBoardById(id);
-  // }
   @Get('/:id')
   getBoardById(@Param('id') id: number): Promise <Board> {
     return this.boardsService.getBoardById(id)
   }
 
-  // @Delete('/:id')
-  // deleteBoard(@Param('id') id: string): void {
-  //   this.boardsService.deleteBoard(id); // return 값 따로 없음
-  // }
   @Delete('/:id')
   deleteBoard(
     @Param('id', ParseIntPipe) id: number,
@@ -85,13 +65,6 @@ export class BoardsController {
     return this.boardsService.deleteBoard(id, user);
   }
 
-  // @Patch('/:id/status')
-  // updateBoardStatus(
-  //   @Param('id') id: string,
-  //   @Body('status', BoardStatusValidationPipe) status: BoardStatus,
-  // ): Board {
-  //   return this.boardsService.updateBoardStatus(id, status);
-  // }
   @Patch('/:id/status')
   updateBoardStatus(
     @Param('id', ParseIntPipe) id:number,
